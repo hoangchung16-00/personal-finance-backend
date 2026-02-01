@@ -79,6 +79,7 @@ curl -H "Authorization: Bearer your_api_key_here" \
 - Automated API key rotation
 - IP-based rate limiting
 - Brute force protection
+- Performance optimization for API key lookup (for large user bases)
 
 ## Future Enhancements
 
@@ -88,6 +89,11 @@ Consider implementing:
 3. **Key Expiration**: Automatic expiration after a set period
 4. **Audit Logging**: Track all API key usage
 5. **Admin Dashboard**: UI for managing API keys
+6. **Performance Optimization**: For large user bases (>10k users), implement:
+   - Token prefix indexing (store first 8 chars separately for fast lookup)
+   - Two-tier hashing (fast hash for lookup, bcrypt for final verification)
+   - API key caching with TTL
+   - Database query optimization with LIMIT
 
 ## CodeQL Findings
 
