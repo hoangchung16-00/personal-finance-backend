@@ -16,6 +16,26 @@ class TransactionTest < ActiveSupport::TestCase
     assert_not transaction.save, "Saved the transaction without amount"
   end
 
+  test "should not save transaction with zero amount" do
+    transaction = @account.transactions.build(
+      amount: 0,
+      transaction_type: :expense,
+      date: Date.today,
+      description: "Test"
+    )
+    assert_not transaction.save, "Saved the transaction with zero amount"
+  end
+
+  test "should not save transaction with negative amount" do
+    transaction = @account.transactions.build(
+      amount: -50.00,
+      transaction_type: :expense,
+      date: Date.today,
+      description: "Test"
+    )
+    assert_not transaction.save, "Saved the transaction with negative amount"
+  end
+
   test "should not save transaction without date" do
     transaction = @account.transactions.build(
       amount: 50.00,
