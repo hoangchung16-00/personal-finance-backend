@@ -99,11 +99,14 @@ class Api::V1::ApiKeyAuthenticationTest < ActionDispatch::IntegrationTest
     other_account = other_user.accounts.create!(name: "Other Account", account_type: :checking, balance: 500)
     
     # Try to access other user's account with current user's API key
-    assert_raises(ActiveRecord::RecordNotFound) do
-      get api_v1_account_url(other_account),
-          headers: { "Authorization" => "Bearer #{@api_key}" },
-          as: :json
-    end
+    # This should return 404 Not Found since the account doesn't belong to current_user
+    get api_v1_account_url(other_account),
+        headers: { "Authorization" => "Bearer #{@api_key}" },
+        as: :json
+    
+    assert_response :not_found
+    json_response = JSON.parse(response.body)
+    assert_includes json_response["error"], "Couldn't find Account"
   end
 
   test "revoked API key should not authenticate" do
