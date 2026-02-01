@@ -15,14 +15,15 @@ The API controllers (`app/controllers/api/v1/*`) disable CSRF protection via `sk
 ### How It Works
 
 1. **Key Generation**: Each user can generate an API key using `user.generate_api_key`
-2. **Secure Storage**: API keys are hashed using SHA256 before storage in the database
+2. **Secure Storage**: API keys are hashed using bcrypt (work factor 12) before storage
 3. **Authentication**: Clients include the API key in the `Authorization` header as `Bearer <api_key>`
-4. **Validation**: The server hashes the provided key and compares it to stored digests
+4. **Validation**: The server uses bcrypt to verify the provided key against stored hashes
 
 ### Security Features
 
-- **Hashed Storage**: Only SHA256 hashes are stored, never plain API keys
-- **Unique Index**: Database constraint ensures API key uniqueness
+- **Bcrypt Hashing**: API keys are hashed using bcrypt (not SHA256) for maximum security
+- **Slow Hashing**: Bcrypt is intentionally slow, making brute-force attacks impractical
+- **Unique Index**: Database constraint ensures API key digest uniqueness
 - **Bearer Token Format**: Industry-standard authentication header format
 - **User Isolation**: All API endpoints enforce user-specific data access
 - **Revocation**: API keys can be revoked using `user.revoke_api_key`
@@ -61,13 +62,14 @@ curl -H "Authorization: Bearer your_api_key_here" \
 ## Current Security Measures
 
 ✅ Implemented:
-- API key authentication with SHA256 hashing
+- API key authentication with bcrypt hashing (secure against brute-force)
 - Input validation on all models
 - Strong parameters in controllers
 - Proper foreign key constraints in database
 - ActiveRecord protection against SQL injection
 - Positive amount validation for transactions
 - User data isolation (users can only access their own data)
+- Protected against malformed Authorization headers
 
 ⚠️ To Be Implemented Before Production:
 - Rate limiting per API key

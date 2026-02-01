@@ -37,7 +37,7 @@ puts "Your API key: #{api_key}"
 ### Security Notes
 
 - **Store your API key securely** - treat it like a password
-- API keys are hashed in the database using SHA256
+- API keys are hashed in the database using bcrypt (highly secure)
 - Never commit API keys to version control
 - Each user has one API key at a time; generating a new one invalidates the old one
 - API keys do not expire but can be revoked

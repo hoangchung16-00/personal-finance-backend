@@ -25,9 +25,9 @@ class UserApiKeyTest < ActiveSupport::TestCase
     # The stored digest should not match the plain key
     assert_not_equal api_key, @user.api_key_digest
     
-    # But hashing the plain key should match the stored digest
-    expected_digest = Digest::SHA256.hexdigest(api_key)
-    assert_equal expected_digest, @user.api_key_digest
+    # But the bcrypt hash should verify against the plain key
+    bcrypt_hash = BCrypt::Password.new(@user.api_key_digest)
+    assert bcrypt_hash == api_key
   end
 
   test "authenticate_by_api_key returns user with valid key" do

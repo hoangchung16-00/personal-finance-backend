@@ -18,8 +18,9 @@ class User < ApplicationRecord
     # Generate a secure random token
     api_key = SecureRandom.hex(32)
 
-    # Store the hashed version
-    self.api_key_digest = Digest::SHA256.hexdigest(api_key)
+    # Store the bcrypt hashed version
+    # BCrypt is slow by design, making brute-force attacks impractical
+    self.api_key_digest = BCrypt::Password.create(api_key)
     self.api_key_created_at = Time.current
     save!
 
@@ -32,9 +33,19 @@ class User < ApplicationRecord
   def self.authenticate_by_api_key(api_key)
     return nil if api_key.blank?
 
-    # Hash the provided key and find user
-    api_key_digest = Digest::SHA256.hexdigest(api_key)
-    find_by(api_key_digest: api_key_digest)
+    # Since bcrypt hashes can't be searched directly, we need to check each user's hash
+    # For production with many users, consider caching or using a secondary index
+    User.where.not(api_key_digest: nil).find_each do |user|
+      begin
+        bcrypt_hash = BCrypt::Password.new(user.api_key_digest)
+        return user if bcrypt_hash == api_key
+      rescue BCrypt::Errors::InvalidHash
+        # Skip if hash is corrupted
+        next
+      end
+    end
+    
+    nil
   end
 
   # Check if the user has an API key

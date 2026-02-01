@@ -42,7 +42,11 @@ module Api
         return nil unless auth_header
 
         # Extract the token from "Bearer <token>"
-        auth_header.split(" ").last if auth_header.start_with?("Bearer ")
+        if auth_header.start_with?("Bearer ")
+          token = auth_header.split(" ", 2).last
+          # Return token only if it's not empty and not just "Bearer"
+          token unless token.blank? || token == "Bearer"
+        end
       end
 
       def current_user
