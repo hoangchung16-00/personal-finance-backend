@@ -3,18 +3,19 @@ require "test_helper"
 class Api::V1::AccountsControllerTest < ActionDispatch::IntegrationTest
   def setup
     @user = User.create!(email: "test@example.com", first_name: "John", last_name: "Doe")
+    @api_key = @user.generate_api_key
     @account = @user.accounts.create!(name: "Main Checking", account_type: :checking, balance: 1000)
   end
 
   test "should get index" do
-    get api_v1_accounts_url, as: :json
+    get api_v1_accounts_url, headers: { "Authorization" => "Bearer #{@api_key}" }, as: :json
     assert_response :success
     json_response = JSON.parse(response.body)
     assert_equal 1, json_response.length
   end
 
   test "should show account" do
-    get api_v1_account_url(@account), as: :json
+    get api_v1_account_url(@account), headers: { "Authorization" => "Bearer #{@api_key}" }, as: :json
     assert_response :success
     json_response = JSON.parse(response.body)
     assert_equal @account.name, json_response["name"]
@@ -22,7 +23,7 @@ class Api::V1::AccountsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create account" do
     assert_difference("Account.count") do
-      post api_v1_accounts_url, params: {
+      post api_v1_accounts_url, headers: { "Authorization" => "Bearer #{@api_key}" }, params: {
         account: { name: "Savings", account_type: "savings", balance: 5000 }
       }, as: :json
     end
@@ -30,7 +31,7 @@ class Api::V1::AccountsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update account" do
-    patch api_v1_account_url(@account), params: {
+    patch api_v1_account_url(@account), headers: { "Authorization" => "Bearer #{@api_key}" }, params: {
       account: { name: "Updated Checking" }
     }, as: :json
     assert_response :success
@@ -40,7 +41,7 @@ class Api::V1::AccountsControllerTest < ActionDispatch::IntegrationTest
 
   test "should destroy account" do
     assert_difference("Account.count", -1) do
-      delete api_v1_account_url(@account), as: :json
+      delete api_v1_account_url(@account), headers: { "Authorization" => "Bearer #{@api_key}" }, as: :json
     end
     assert_response :no_content
   end
