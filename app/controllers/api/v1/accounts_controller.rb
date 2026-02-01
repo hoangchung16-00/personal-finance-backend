@@ -1,7 +1,7 @@
 module Api
   module V1
     class AccountsController < BaseController
-      before_action :set_account, only: [:show, :update, :destroy]
+      before_action :set_account, only: [ :show, :update, :destroy ]
 
       # GET /api/v1/accounts
       def index

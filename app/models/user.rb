@@ -47,7 +47,7 @@ class User < ApplicationRecord
         next
       end
     end
-    
+
     nil
   end
 

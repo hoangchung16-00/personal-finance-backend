@@ -8,16 +8,16 @@ class Api::V1::ApiKeyAuthenticationTest < ActionDispatch::IntegrationTest
   end
 
   test "should authenticate with valid API key in Authorization header" do
-    get api_v1_accounts_url, 
+    get api_v1_accounts_url,
         headers: { "Authorization" => "Bearer #{@api_key}" },
         as: :json
-    
+
     assert_response :success
   end
 
   test "should reject request without API key" do
     get api_v1_accounts_url, as: :json
-    
+
     assert_response :unauthorized
     json_response = JSON.parse(response.body)
     assert_equal "Invalid or missing API key", json_response["error"]
@@ -27,7 +27,7 @@ class Api::V1::ApiKeyAuthenticationTest < ActionDispatch::IntegrationTest
     get api_v1_accounts_url,
         headers: { "Authorization" => "Bearer invalid_key_123" },
         as: :json
-    
+
     assert_response :unauthorized
     json_response = JSON.parse(response.body)
     assert_equal "Invalid or missing API key", json_response["error"]
@@ -37,7 +37,7 @@ class Api::V1::ApiKeyAuthenticationTest < ActionDispatch::IntegrationTest
     get api_v1_accounts_url,
         headers: { "Authorization" => "#{@api_key}" }, # Missing "Bearer "
         as: :json
-    
+
     assert_response :unauthorized
   end
 
@@ -45,7 +45,7 @@ class Api::V1::ApiKeyAuthenticationTest < ActionDispatch::IntegrationTest
     get api_v1_accounts_url,
         headers: { "Authorization" => "Bearer #{@api_key}" },
         as: :json
-    
+
     assert_response :success
     json_response = JSON.parse(response.body)
     assert_equal 1, json_response.length
@@ -59,7 +59,7 @@ class Api::V1::ApiKeyAuthenticationTest < ActionDispatch::IntegrationTest
            params: { account: { name: "Savings", account_type: "savings", balance: 5000 } },
            as: :json
     end
-    
+
     assert_response :created
   end
 
@@ -67,7 +67,7 @@ class Api::V1::ApiKeyAuthenticationTest < ActionDispatch::IntegrationTest
     get api_v1_account_url(@account),
         headers: { "Authorization" => "Bearer #{@api_key}" },
         as: :json
-    
+
     assert_response :success
     json_response = JSON.parse(response.body)
     assert_equal @account.name, json_response["name"]
@@ -78,7 +78,7 @@ class Api::V1::ApiKeyAuthenticationTest < ActionDispatch::IntegrationTest
           headers: { "Authorization" => "Bearer #{@api_key}" },
           params: { account: { name: "Updated Account" } },
           as: :json
-    
+
     assert_response :success
     @account.reload
     assert_equal "Updated Account", @account.name
@@ -90,20 +90,20 @@ class Api::V1::ApiKeyAuthenticationTest < ActionDispatch::IntegrationTest
              headers: { "Authorization" => "Bearer #{@api_key}" },
              as: :json
     end
-    
+
     assert_response :no_content
   end
 
   test "user cannot access another user's resources" do
     other_user = User.create!(email: "other@example.com", first_name: "Jane", last_name: "Smith")
     other_account = other_user.accounts.create!(name: "Other Account", account_type: :checking, balance: 500)
-    
+
     # Try to access other user's account with current user's API key
     # This should return 404 Not Found since the account doesn't belong to current_user
     get api_v1_account_url(other_account),
         headers: { "Authorization" => "Bearer #{@api_key}" },
         as: :json
-    
+
     assert_response :not_found
     json_response = JSON.parse(response.body)
     assert_includes json_response["error"], "Couldn't find Account"
@@ -111,11 +111,11 @@ class Api::V1::ApiKeyAuthenticationTest < ActionDispatch::IntegrationTest
 
   test "revoked API key should not authenticate" do
     @user.revoke_api_key
-    
+
     get api_v1_accounts_url,
         headers: { "Authorization" => "Bearer #{@api_key}" },
         as: :json
-    
+
     assert_response :unauthorized
   end
 end

@@ -33,7 +33,7 @@ class Transaction < ApplicationRecord
 
   def adjust_account_balance
     return unless persisted? || destroyed?
-    
+
     delta = calculate_balance_delta
     account.update_column(:balance, account.balance + delta)
   end
@@ -45,7 +45,7 @@ class Transaction < ApplicationRecord
 
   def calculate_balance_delta
     new_impact = transaction_type == "income" ? amount : -amount
-    
+
     if saved_change_to_amount? || saved_change_to_transaction_type?
       old_amount = saved_change_to_amount? ? amount_before_last_save : amount
       old_type = saved_change_to_transaction_type? ? transaction_type_before_last_save : transaction_type

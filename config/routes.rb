@@ -9,10 +9,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :accounts do
-        resources :transactions, only: [:index, :create]
+        resources :transactions, only: [ :index, :create ]
       end
       resources :categories
-      resources :transactions, except: [:create]
+      resources :transactions, except: [ :create ]
     end
   end
 

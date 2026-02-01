@@ -26,6 +26,6 @@ class Account < ApplicationRecord
 
   def set_defaults
     self.balance ||= 0.0
-    self.currency ||= 'USD'
+    self.currency ||= "USD"
   end
 end
