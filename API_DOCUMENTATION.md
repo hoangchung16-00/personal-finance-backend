@@ -4,14 +4,59 @@ Base URL: `/api/v1`
 
 ## Authentication
 
-⚠️ **Note**: Authentication is not yet implemented. All endpoints currently work without authentication.
+**API Key Authentication** is required for all endpoints.
 
-**Before production deployment**, you must implement one of:
-- JWT (JSON Web Tokens)
-- API Keys
-- OAuth 2.0
+### Getting an API Key
 
-See `SECURITY.md` for detailed implementation guidance.
+To use this API, you must have an API key. The API key should be included in the `Authorization` header of every request using the Bearer token format:
+
+```
+Authorization: Bearer <your_api_key>
+```
+
+### Example Request with Authentication
+
+```bash
+curl -X GET http://localhost:3000/api/v1/accounts \
+  -H "Authorization: Bearer your_api_key_here" \
+  -H "Content-Type: application/json"
+```
+
+### Generating an API Key
+
+API keys can be generated programmatically using the Rails console:
+
+```ruby
+# In Rails console (rails c)
+user = User.find_by(email: "your_email@example.com")
+api_key = user.generate_api_key
+puts "Your API key: #{api_key}"
+# Store this key securely - it won't be shown again!
+```
+
+### Security Notes
+
+- **Store your API key securely** - treat it like a password
+- API keys are hashed in the database using SHA256
+- Never commit API keys to version control
+- Each user has one API key at a time; generating a new one invalidates the old one
+- API keys do not expire but can be revoked
+
+### Authentication Errors
+
+If authentication fails, you'll receive a `401 Unauthorized` response:
+
+```json
+{
+  "error": "Invalid or missing API key"
+}
+```
+
+Common authentication issues:
+- Missing `Authorization` header
+- Invalid API key
+- Revoked API key
+- Malformed header (must be "Bearer <key>")
 
 ## Endpoints
 
@@ -380,8 +425,12 @@ Validation errors.
 ### Using curl
 
 ```bash
+# Set your API key as an environment variable
+export API_KEY="your_api_key_here"
+
 # Create an account
 curl -X POST http://localhost:3000/api/v1/accounts \
+  -H "Authorization: Bearer $API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "account": {
@@ -392,10 +441,12 @@ curl -X POST http://localhost:3000/api/v1/accounts \
   }'
 
 # List accounts
-curl http://localhost:3000/api/v1/accounts
+curl http://localhost:3000/api/v1/accounts \
+  -H "Authorization: Bearer $API_KEY"
 
 # Create a transaction
 curl -X POST http://localhost:3000/api/v1/accounts/1/transactions \
+  -H "Authorization: Bearer $API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "transaction": {
@@ -407,10 +458,12 @@ curl -X POST http://localhost:3000/api/v1/accounts/1/transactions \
   }'
 
 # List transactions
-curl http://localhost:3000/api/v1/transactions
+curl http://localhost:3000/api/v1/transactions \
+  -H "Authorization: Bearer $API_KEY"
 
 # Filter transactions
-curl "http://localhost:3000/api/v1/transactions?transaction_type=expense&start_date=2026-01-01"
+curl "http://localhost:3000/api/v1/transactions?transaction_type=expense&start_date=2026-01-01" \
+  -H "Authorization: Bearer $API_KEY"
 ```
 
 ### Using Postman or Insomnia
@@ -449,7 +502,7 @@ CORS is configured to allow cross-origin requests. See `config/initializers/cors
 
 ## Future Enhancements
 
-1. **Authentication** - JWT, API keys, or OAuth
+1. ✅ **Authentication** - API key authentication is implemented
 2. **Pagination** - For large datasets
 3. **Rate Limiting** - Prevent abuse
 4. **Webhooks** - Real-time notifications
@@ -459,6 +512,8 @@ CORS is configured to allow cross-origin requests. See `config/initializers/cors
 8. **Recurring Transactions** - Auto-create regular transactions
 9. **Multi-currency** - Currency conversion
 10. **Attachments** - Receipt images
+11. **API Key Scopes** - Granular permissions per API key
+12. **Key Expiration** - Automatic API key rotation
 
 ---
 
