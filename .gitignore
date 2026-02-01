@@ -1,0 +1,12 @@
+/log/*
+/tmp/*
+/.byebug_history
+/.bundle
+/vendor/bundle
+/node_modules
+/*.env
+/config/master.key
+/db/*.sqlite3
+/public/packs
+/public/packs-test
+.byebug_history
