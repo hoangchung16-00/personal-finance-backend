@@ -6,6 +6,8 @@ module Api
       # rather than session-based cookies that are vulnerable to CSRF
       skip_before_action :verify_authenticity_token
 
+      before_action :authenticate_request
+
       rescue_from ActiveRecord::RecordNotFound, with: :not_found
       rescue_from ActiveRecord::RecordInvalid, with: :unprocessable_entity
       rescue_from ActionController::ParameterMissing, with: :bad_request
@@ -24,11 +26,27 @@ module Api
         render json: { error: exception.message }, status: :bad_request
       end
 
+      def authenticate_request
+        api_key = extract_api_key_from_header
+        @current_user = User.authenticate_by_api_key(api_key)
+
+        unless @current_user
+          render json: { error: "Invalid or missing API key" }, status: :unauthorized
+        end
+      end
+
+      def extract_api_key_from_header
+        # Check for API key in Authorization header
+        # Format: "Authorization: Bearer <api_key>"
+        auth_header = request.headers["Authorization"]
+        return nil unless auth_header
+
+        # Extract the token from "Bearer <token>"
+        auth_header.split(" ").last if auth_header.start_with?("Bearer ")
+      end
+
       def current_user
-        # TODO: Implement proper token-based authentication (JWT, API keys, or OAuth)
-        # For now, return the first user. In production, this should validate an auth token
-        # and return the authenticated user
-        @current_user ||= User.first
+        @current_user
       end
     end
   end
