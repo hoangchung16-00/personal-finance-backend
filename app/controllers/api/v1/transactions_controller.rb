@@ -1,8 +1,8 @@
 module Api
   module V1
     class TransactionsController < BaseController
-      before_action :set_transaction, only: [:show, :update, :destroy]
-      before_action :set_account, only: [:index, :create]
+      before_action :set_transaction, only: [ :show, :update, :destroy ]
+      before_action :set_account, only: [ :index, :create ]
 
       # GET /api/v1/accounts/:account_id/transactions
       # GET /api/v1/transactions
@@ -34,7 +34,7 @@ module Api
 
       # GET /api/v1/transactions/:id
       def show
-        render json: @transaction.as_json(include: [:category, :account])
+        render json: @transaction.as_json(include: [ :category, :account ])
       end
 
       # POST /api/v1/accounts/:account_id/transactions

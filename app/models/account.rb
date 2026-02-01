@@ -4,7 +4,7 @@ class Account < ApplicationRecord
   has_many :transactions, dependent: :destroy
 
   # Enums
-  enum account_type: {
+  enum :account_type, {
     checking: 0,
     savings: 1,
     credit_card: 2,
@@ -26,6 +26,6 @@ class Account < ApplicationRecord
 
   def set_defaults
     self.balance ||= 0.0
-    self.currency ||= 'USD'
+    self.currency ||= "USD"
   end
 end
