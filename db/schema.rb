@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_16_061759) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_01_082300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,6 +35,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_16_061759) do
     t.index ["user_id"], name: "index_categories_on_user_id"
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "category_id"
+    t.decimal "amount", precision: 15, scale: 2, null: false
+    t.integer "transaction_type", default: 1, null: false
+    t.date "date", null: false
+    t.text "description"
+    t.string "notes"
+    t.string "tags", default: [], array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "date"], name: "index_transactions_on_account_id_and_date"
+    t.index ["account_id"], name: "index_transactions_on_account_id"
+    t.index ["category_id"], name: "index_transactions_on_category_id"
+    t.index ["date"], name: "index_transactions_on_date"
+    t.index ["transaction_type"], name: "index_transactions_on_transaction_type"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -56,4 +74,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_16_061759) do
 
   add_foreign_key "accounts", "users"
   add_foreign_key "categories", "users"
+  add_foreign_key "transactions", "accounts"
+  add_foreign_key "transactions", "categories"
 end
