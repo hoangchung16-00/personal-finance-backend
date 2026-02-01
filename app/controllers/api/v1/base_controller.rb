@@ -1,10 +1,9 @@
 module Api
   module V1
     class BaseController < ApplicationController
-      # Skip CSRF token verification for API requests
-      # API clients will authenticate using tokens (e.g., JWT, API keys)
-      # rather than session-based cookies that are vulnerable to CSRF
-      skip_before_action :verify_authenticity_token
+      # Note: CSRF protection is not included in ActionController::API
+      # API clients authenticate using tokens (e.g., API keys) rather than
+      # session-based cookies that are vulnerable to CSRF attacks
 
       before_action :authenticate_request
 
