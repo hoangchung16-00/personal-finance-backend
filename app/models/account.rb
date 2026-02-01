@@ -4,7 +4,7 @@ class Account < ApplicationRecord
   has_many :transactions, dependent: :destroy
 
   # Enums
-  enum account_type: {
+  enum :account_type, {
     checking: 0,
     savings: 1,
     credit_card: 2,

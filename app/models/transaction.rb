@@ -4,7 +4,7 @@ class Transaction < ApplicationRecord
   belongs_to :category, optional: true
 
   # Enums
-  enum transaction_type: {
+  enum :transaction_type, {
     income: 0,
     expense: 1,
     transfer: 2
