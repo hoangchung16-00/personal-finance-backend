@@ -29,6 +29,8 @@ Before deploying, ensure you have:
 2. Basic understanding of environment variables
 3. A free account on your chosen hosting platform
 
+**📋 Use the [Deployment Checklist](DEPLOYMENT_CHECKLIST.md)** to ensure you don't miss any steps!
+
 ## Option 1: Deploy to Render (Recommended for Beginners)
 
 **Why Render?** Free tier includes PostgreSQL database, automatic deployments, and easy setup.
@@ -546,13 +548,14 @@ If you encounter issues:
 
 After successful deployment:
 
-1. ✅ Test all API endpoints (see [API_DOCUMENTATION.md](API_DOCUMENTATION.md))
-2. ✅ Set up monitoring and alerting
-3. ✅ Configure backups for your database
-4. ✅ Review [SECURITY.md](SECURITY.md) for security best practices
-5. ✅ Set up CI/CD (see [CI_TUTORIAL.md](CI_TUTORIAL.md))
-6. ✅ Consider a custom domain for production use
-7. ✅ Set up error tracking (e.g., Sentry, Rollbar)
+1. ✅ Complete the [Post-Deployment Checklist](DEPLOYMENT_CHECKLIST.md#-post-deployment-verification)
+2. ✅ Test all API endpoints (see [API_DOCUMENTATION.md](API_DOCUMENTATION.md))
+3. ✅ Set up monitoring and alerting
+4. ✅ Configure backups for your database
+5. ✅ Review [SECURITY.md](SECURITY.md) for security best practices
+6. ✅ Set up CI/CD (see [CI_TUTORIAL.md](CI_TUTORIAL.md))
+7. ✅ Consider a custom domain for production use
+8. ✅ Set up error tracking (e.g., Sentry, Rollbar)
 
 ---
 

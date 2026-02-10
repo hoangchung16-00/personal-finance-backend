@@ -5,6 +5,7 @@ Rails API for the Personal Finance Management System.
 ## Documentation
 - [Quick Start Deployment](QUICKSTART_DEPLOYMENT.md) - Deploy in under 10 minutes! ⚡
 - [Deployment Tutorial](DEPLOYMENT_TUTORIAL.md) - Step-by-step guide to deploy on free hosting platforms
+- [Deployment Checklist](DEPLOYMENT_CHECKLIST.md) - Pre and post-deployment verification checklist
 - [CI Tutorial](CI_TUTORIAL.md) - Complete guide to running unit tests with GitHub Actions
 - [API Documentation](API_DOCUMENTATION.md)
 - [Implementation Guide](IMPLEMENTATION.md)
