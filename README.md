@@ -3,6 +3,7 @@
 Rails API for the Personal Finance Management System.
 
 ## Documentation
+- [Deployment Tutorial](DEPLOYMENT_TUTORIAL.md) - Step-by-step guide to deploy on free hosting platforms
 - [CI Tutorial](CI_TUTORIAL.md) - Complete guide to running unit tests with GitHub Actions
 - [API Documentation](API_DOCUMENTATION.md)
 - [Implementation Guide](IMPLEMENTATION.md)
@@ -18,6 +19,9 @@ Rails API for the Personal Finance Management System.
 - configure config/database.yml or set DATABASE_URL
 - rails db:create db:migrate
 - rails s -p 3000
+
+## Deployment
+For detailed deployment instructions on free hosting platforms (Render, Railway, Fly.io, Heroku), see the [Deployment Tutorial](DEPLOYMENT_TUTORIAL.md).
 
 ## Testing
 - Run all tests: `bin/rails test`
