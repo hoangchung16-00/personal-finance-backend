@@ -48,7 +48,7 @@ group :development, :test do
   # Pin to Minitest 5.x for Rails 8.0.4 compatibility
   # Minitest 6.0+ has breaking API changes incompatible with Rails 8.0.4
   # See: https://github.com/rails/rails/issues/53303
-  gem "minitest", "~> 5.0"
+  gem "minitest", "~> 6.0"
 end
 
 gem "rack-cors", "~> 3.0"
